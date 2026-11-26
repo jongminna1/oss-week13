@@ -2,8 +2,8 @@
 // The provider, the model and the key come from .env:
 //   process.env.LLM_BASE_URL, process.env.LLM_MODEL, process.env.LLM_API_KEY
 
-// TODO P4: make a constant SYSTEM here: the rules for every answer (tone, length, format).
-//          Then send it as the first message, before the user's message, in ask().
+const SYSTEM = `해요체로 답하세요. 답은 한 문단에 세 문장 이내로 작성하세요.
+목록, 제목, 굵은 글씨 같은 마크다운을 쓰지 마세요.`;
 
 async function complete(messages) {
   const response = await fetch(`${process.env.LLM_BASE_URL}/chat/completions`, {
@@ -20,7 +20,10 @@ async function complete(messages) {
 }
 
 export async function ask(question) {
-  return complete([{ role: "user", content: question }]);
+  return complete([
+    { role: "system", content: SYSTEM },
+    { role: "user", content: question },
+  ]);
 }
 
 // chat([{ role: "user", content: "..." }, { role: "assistant", content: "..." }, ...])
