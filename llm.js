@@ -5,10 +5,22 @@
 // TODO P4: make a constant SYSTEM here: the rules for every answer (tone, length, format).
 //          Then send it as the first message, before the user's message, in ask().
 
-// ask("a question")  ->  the model's answer, as a string
+async function complete(messages) {
+  const response = await fetch(`${process.env.LLM_BASE_URL}/chat/completions`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env.LLM_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ model: process.env.LLM_MODEL, messages }),
+  });
+  if (!response.ok) throw new Error(`LLM: HTTP ${response.status}`);
+  const data = await response.json();
+  return data.choices[0].message.content.trim();
+}
+
 export async function ask(question) {
-  // TODO P3: write this function (see problems/P3_ask.md). Delete the throw line below.
-  throw new Error("ask() is not written yet");
+  return complete([{ role: "user", content: question }]);
 }
 
 // chat([{ role: "user", content: "..." }, { role: "assistant", content: "..." }, ...])
