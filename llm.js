@@ -29,8 +29,7 @@ export async function ask(question) {
 // chat([{ role: "user", content: "..." }, { role: "assistant", content: "..." }, ...])
 //   ->  the model's next answer, as a string
 export async function chat(history) {
-  // TODO P5: write this function (see problems/P5_chat.md). Delete the throw line below.
-  throw new Error("chat() is not written yet");
+  return complete([{ role: "system", content: SYSTEM }, ...history]);
 }
 
 // analyze("a review")  ->  an object, not a sentence:
